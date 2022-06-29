@@ -6,7 +6,7 @@ import defaultValue from "../../Core/defaultValue.js";
 import defined from "../../Core/defined.js";
 import ImageBasedLightingPipelineStage from "./ImageBasedLightingPipelineStage.js";
 import Matrix4 from "../../Core/Matrix4.js";
-import ModelExperimentalArticulation from "./ModelExperimentalArticulation.js";
+import ModelArticulation from "./ModelArticulation.js";
 import ModelColorPipelineStage from "./ModelColorPipelineStage.js";
 import ModelClippingPlanesPipelineStage from "./ModelClippingPlanesPipelineStage.js";
 import ModelPrimitive from "./ModelPrimitive.js";
@@ -238,7 +238,7 @@ function initialize(sceneGraph) {
   const runtimeArticulations = sceneGraph._runtimeArticulations;
   for (let i = 0; i < articulationsLength; i++) {
     const articulation = articulations[i];
-    const runtimeArticulation = new ModelExperimentalArticulation({
+    const runtimeArticulation = new ModelArticulation({
       articulation: articulation,
       sceneGraph: sceneGraph,
     });
