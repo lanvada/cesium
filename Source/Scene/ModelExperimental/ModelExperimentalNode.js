@@ -77,7 +77,7 @@ export default function ModelExperimentalNode(options) {
   /**
    * The mesh primitives that belong to this node
    *
-   * @type {ModelExperimentalPrimitive[]}
+   * @type {ModelPrimitive[]}
    * @readonly
    *
    * @private

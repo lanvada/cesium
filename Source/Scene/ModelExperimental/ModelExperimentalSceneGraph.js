@@ -9,7 +9,7 @@ import Matrix4 from "../../Core/Matrix4.js";
 import ModelExperimentalArticulation from "./ModelExperimentalArticulation.js";
 import ModelColorPipelineStage from "./ModelColorPipelineStage.js";
 import ModelClippingPlanesPipelineStage from "./ModelClippingPlanesPipelineStage.js";
-import ModelExperimentalPrimitive from "./ModelExperimentalPrimitive.js";
+import ModelPrimitive from "./ModelPrimitive.js";
 import ModelExperimentalNode from "./ModelExperimentalNode.js";
 import ModelExperimentalSkin from "./ModelExperimentalSkin.js";
 import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
@@ -410,7 +410,7 @@ function traverseSceneGraph(sceneGraph, node, transformToRoot) {
   const primitivesLength = node.primitives.length;
   for (let i = 0; i < primitivesLength; i++) {
     runtimeNode.runtimePrimitives.push(
-      new ModelExperimentalPrimitive({
+      new ModelPrimitive({
         primitive: node.primitives[i],
         node: node,
         model: sceneGraph._model,

@@ -9,7 +9,7 @@ import {
   Math as CesiumMath,
   Matrix4,
   ModelExperimentalNode,
-  ModelExperimentalPrimitive,
+  ModelPrimitive,
   ModelExperimentalType,
   PrimitiveType,
   ModelRenderResources,
@@ -92,13 +92,13 @@ describe("Scene/ModelExperimental/PrimitiveRenderResources", function () {
   let runtimePrimitive;
   let runtimePrimitiveWithoutIndices;
   beforeAll(function () {
-    runtimePrimitive = new ModelExperimentalPrimitive({
+    runtimePrimitive = new ModelPrimitive({
       primitive: primitive,
       node: mockNode,
       model: mockModel,
     });
 
-    runtimePrimitiveWithoutIndices = new ModelExperimentalPrimitive({
+    runtimePrimitiveWithoutIndices = new ModelPrimitive({
       primitive: primitiveWithoutIndices,
       node: mockNode,
       model: mockModel,

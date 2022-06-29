@@ -33,12 +33,12 @@ import WireframePipelineStage from "./WireframePipelineStage.js";
  * @param {ModelComponents.Node} options.node The node that this primitive belongs to.
  * @param {ModelExperimental} options.model The {@link ModelExperimental} this primitive belongs to.
  *
- * @alias ModelExperimentalPrimitive
+ * @alias ModelPrimitive
  * @constructor
  *
  * @private
  */
-export default function ModelExperimentalPrimitive(options) {
+export default function ModelPrimitive(options) {
   options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
   const primitive = options.primitive;
@@ -145,7 +145,7 @@ export default function ModelExperimentalPrimitive(options) {
  *
  * @private
  */
-ModelExperimentalPrimitive.prototype.configurePipeline = function (frameState) {
+ModelPrimitive.prototype.configurePipeline = function (frameState) {
   const pipelineStages = this.pipelineStages;
   pipelineStages.length = 0;
 
