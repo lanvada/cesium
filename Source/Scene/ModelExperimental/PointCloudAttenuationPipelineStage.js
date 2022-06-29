@@ -9,7 +9,7 @@ import PointCloudAttenuationStageVS from "../../Shaders/ModelExperimental/PointC
 import Cesium3DTileRefine from "../Cesium3DTileRefine.js";
 import SceneMode from "../SceneMode.js";
 import VertexAttributeSemantic from "../VertexAttributeSemantic.js";
-import ModelExperimentalType from "./ModelExperimentalType.js";
+import ModelType from "./ModelType.js";
 import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
 
 /**
@@ -57,7 +57,7 @@ PointCloudAttenuationPipelineStage.process = function (
   let content;
   let is3DTiles;
   let usesAddRefinement;
-  if (ModelExperimentalType.is3DTiles(model.type)) {
+  if (ModelType.is3DTiles(model.type)) {
     is3DTiles = true;
     content = model.content;
     usesAddRefinement = content.tile.refine === Cesium3DTileRefine.ADD;

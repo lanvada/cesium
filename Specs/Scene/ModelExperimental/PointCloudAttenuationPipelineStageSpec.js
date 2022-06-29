@@ -4,7 +4,7 @@ import {
   Cesium3DTileRefine,
   Math as CesiumMath,
   Matrix4,
-  ModelExperimentalType,
+  ModelType,
   OrthographicFrustum,
   PointCloudAttenuationPipelineStage,
   PointCloudShading,
@@ -55,7 +55,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.GLTF,
+          type: ModelType.GLTF,
         },
       };
 
@@ -87,7 +87,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.GLTF,
+          type: ModelType.GLTF,
           pointCloudShading: pointCloudShading,
         },
       };
@@ -114,7 +114,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.TILE_GLTF,
+          type: ModelType.TILE_GLTF,
           pointCloudShading: pointCloudShading,
           content: {
             tile: {
@@ -149,7 +149,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.TILE_GLTF,
+          type: ModelType.TILE_GLTF,
           pointCloudShading: pointCloudShading,
           content: {
             tile: {
@@ -184,7 +184,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.GLTF,
+          type: ModelType.GLTF,
           pointCloudShading: pointCloudShading,
         },
       };
@@ -210,7 +210,7 @@ describe(
         shaderBuilder: new ShaderBuilder(),
         uniformMap: uniformMap,
         model: {
-          type: ModelExperimentalType.TILE_GLTF,
+          type: ModelType.TILE_GLTF,
           pointCloudShading: pointCloudShading,
           content: {
             tile: {
@@ -243,7 +243,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.TILE_GLTF,
+          type: ModelType.TILE_GLTF,
           pointCloudShading: pointCloudShading,
           content: {
             tile: {
@@ -277,7 +277,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.TILE_GLTF,
+          type: ModelType.TILE_GLTF,
           pointCloudShading: pointCloudShading,
           content: {
             tile: {
@@ -311,7 +311,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.GLTF,
+          type: ModelType.GLTF,
           pointCloudShading: pointCloudShading,
         },
       };
@@ -339,7 +339,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.GLTF,
+          type: ModelType.GLTF,
           pointCloudShading: pointCloudShading,
         },
       };
@@ -368,7 +368,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.GLTF,
+          type: ModelType.GLTF,
           pointCloudShading: pointCloudShading,
         },
       };
@@ -398,7 +398,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.GLTF,
+          type: ModelType.GLTF,
           pointCloudShading: pointCloudShading,
         },
       };
@@ -430,7 +430,7 @@ describe(
         uniformMap: uniformMap,
         runtimeNode: mockRuntimeNode,
         model: {
-          type: ModelExperimentalType.GLTF,
+          type: ModelType.GLTF,
           pointCloudShading: pointCloudShading,
         },
       };

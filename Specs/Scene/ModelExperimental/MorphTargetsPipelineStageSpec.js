@@ -3,7 +3,7 @@ import {
   ComponentDatatype,
   GltfLoader,
   ModelExperimentalStatistics,
-  ModelExperimentalType,
+  ModelType,
   MorphTargetsPipelineStage,
   Resource,
   ResourceCache,
@@ -85,7 +85,7 @@ describe(
         attributeIndex: 1,
         model: {
           statistics: new ModelExperimentalStatistics(),
-          type: ModelExperimentalType.TILE_GLTF,
+          type: ModelType.TILE_GLTF,
         },
         runtimeNode: {
           morphWeights: undefined,
@@ -157,7 +157,7 @@ describe(
         attributeIndex: 1,
         model: {
           statistics: new ModelExperimentalStatistics(),
-          type: ModelExperimentalType.TILE_GLTF,
+          type: ModelType.TILE_GLTF,
         },
         runtimeNode: {
           morphWeights: undefined,

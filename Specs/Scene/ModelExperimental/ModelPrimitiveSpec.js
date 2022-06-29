@@ -11,7 +11,7 @@ import {
   LightingPipelineStage,
   MaterialPipelineStage,
   MetadataPipelineStage,
-  ModelExperimentalType,
+  ModelType,
   ModelPrimitive,
   MorphTargetsPipelineStage,
   PickingPipelineStage,
@@ -34,7 +34,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
   };
   const mockNode = {};
   const mockModel = {
-    type: ModelExperimentalType.GLTF,
+    type: ModelType.GLTF,
     allowPicking: true,
     featureIdLabel: "featureId_0",
   };
@@ -144,7 +144,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       primitive: mockPrimitive,
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         allowPicking: false,
         content: {},
       },
@@ -182,7 +182,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
         },
       },
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         allowPicking: true,
         instanceFeatureIdLabel: "instanceFeatureId_1",
         content: {},
@@ -228,7 +228,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       },
       node: {},
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         allowPicking: true,
         featureIdLabel: "pickingIds",
         content: {},
@@ -262,7 +262,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       },
       node: {},
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         allowPicking: true,
         featureIdLabel: "featureId_1",
         content: {},
@@ -311,7 +311,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       primitive: mockPrimitive,
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         content: {},
         customShader: new CustomShader({
           vertexShaderText: emptyVertexShader,
@@ -341,7 +341,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       primitive: mockPrimitive,
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         content: {},
         customShader: new CustomShader({
           mode: CustomShaderMode.REPLACE_MATERIAL,
@@ -371,7 +371,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       primitive: mockPrimitive,
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         content: {},
         customShader: new CustomShader({
           mode: CustomShaderMode.REPLACE_MATERIAL,
@@ -409,7 +409,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       },
       node: mockNode,
       model: {
-        type: ModelExperimentalType.TILE_PNTS,
+        type: ModelType.TILE_PNTS,
         featureIdLabel: "featureId_0",
         pointCloudShading: pointCloudShading,
         content: {
@@ -448,7 +448,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       },
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
         pointCloudShading: pointCloudShading,
       },
@@ -482,7 +482,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       },
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
         pointCloudShading: pointCloudShading,
       },
@@ -512,7 +512,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       },
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
         pointCloudShading: undefined,
       },
@@ -544,7 +544,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       },
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
       },
     });
@@ -584,7 +584,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       },
       node: mockNode,
       model: {
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
         pointCloudShading: undefined,
       },
@@ -617,7 +617,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       model: {
         debugWireframe: true,
         _enableDebugWireframe: true,
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
       },
     });
@@ -649,7 +649,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       model: {
         debugWireframe: true,
         _enableDebugWireframe: false,
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
       },
     });
@@ -679,7 +679,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       node: mockNode,
       model: {
         debugWireframe: true,
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
       },
     });
@@ -710,7 +710,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       node: mockNode,
       model: {
         debugWireframe: true,
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
       },
     });
@@ -740,7 +740,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       node: mockNode,
       model: {
         _projectTo2D: true,
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
       },
     });
@@ -771,7 +771,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       node: mockNode,
       model: {
         _projectTo2D: true,
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
       },
     });
@@ -801,7 +801,7 @@ describe("Scene/ModelExperimental/ModelPrimitive", function () {
       node: mockNode,
       model: {
         _projectTo2D: true,
-        type: ModelExperimentalType.GLTF,
+        type: ModelType.GLTF,
         featureIdLabel: "featureId_0",
       },
     });

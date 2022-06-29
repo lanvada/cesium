@@ -15,7 +15,7 @@ import ImageBasedLighting from "../ImageBasedLighting.js";
 import ModelExperimentalAnimationCollection from "./ModelExperimentalAnimationCollection.js";
 import ModelExperimentalSceneGraph from "./ModelExperimentalSceneGraph.js";
 import ModelExperimentalStatistics from "./ModelExperimentalStatistics.js";
-import ModelExperimentalType from "./ModelExperimentalType.js";
+import ModelType from "./ModelType.js";
 import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
 import Pass from "../../Renderer/Pass.js";
 import Resource from "../../Core/Resource.js";
@@ -104,14 +104,14 @@ export default function ModelExperimental(options) {
   /**
    * Type of this model, to distinguish individual glTF files from 3D Tiles
    * internally. The corresponding constructor parameter is undocumented, since
-   * ModelExperimentalType is part of the private API.
+   * ModelType is part of the private API.
    *
-   * @type {ModelExperimentalType}
+   * @type {ModelType}
    * @readonly
    *
    * @private
    */
-  this.type = defaultValue(options.type, ModelExperimentalType.GLTF);
+  this.type = defaultValue(options.type, ModelType.GLTF);
 
   /**
    * The 4x4 transformation matrix that transforms the model from model to world coordinates.
@@ -2305,9 +2305,7 @@ ModelExperimental.fromGltf = function (options) {
   const loader = new GltfLoader(loaderOptions);
 
   const is3DTiles = defined(options.content);
-  const type = is3DTiles
-    ? ModelExperimentalType.TILE_GLTF
-    : ModelExperimentalType.GLTF;
+  const type = is3DTiles ? ModelType.TILE_GLTF : ModelType.GLTF;
 
   const modelOptions = makeModelOptions(loader, type, options);
   modelOptions.resource = loaderOptions.gltfResource;
@@ -2336,11 +2334,7 @@ ModelExperimental.fromB3dm = function (options) {
 
   const loader = new B3dmLoader(loaderOptions);
 
-  const modelOptions = makeModelOptions(
-    loader,
-    ModelExperimentalType.TILE_B3DM,
-    options
-  );
+  const modelOptions = makeModelOptions(loader, ModelType.TILE_B3DM, options);
   const model = new ModelExperimental(modelOptions);
   return model;
 };
@@ -2355,11 +2349,7 @@ ModelExperimental.fromPnts = function (options) {
   };
   const loader = new PntsLoader(loaderOptions);
 
-  const modelOptions = makeModelOptions(
-    loader,
-    ModelExperimentalType.TILE_PNTS,
-    options
-  );
+  const modelOptions = makeModelOptions(loader, ModelType.TILE_PNTS, options);
   const model = new ModelExperimental(modelOptions);
   return model;
 };
@@ -2382,11 +2372,7 @@ ModelExperimental.fromI3dm = function (options) {
   };
   const loader = new I3dmLoader(loaderOptions);
 
-  const modelOptions = makeModelOptions(
-    loader,
-    ModelExperimentalType.TILE_I3DM,
-    options
-  );
+  const modelOptions = makeModelOptions(loader, ModelType.TILE_I3DM, options);
   const model = new ModelExperimental(modelOptions);
   return model;
 };
@@ -2401,7 +2387,7 @@ ModelExperimental.fromGeoJson = function (options) {
   const loader = new GeoJsonLoader(loaderOptions);
   const modelOptions = makeModelOptions(
     loader,
-    ModelExperimentalType.TILE_GEOJSON,
+    ModelType.TILE_GEOJSON,
     options
   );
   const model = new ModelExperimental(modelOptions);
