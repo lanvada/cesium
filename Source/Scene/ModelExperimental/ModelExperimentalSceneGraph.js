@@ -11,7 +11,7 @@ import ModelColorPipelineStage from "./ModelColorPipelineStage.js";
 import ModelClippingPlanesPipelineStage from "./ModelClippingPlanesPipelineStage.js";
 import ModelPrimitive from "./ModelPrimitive.js";
 import ModelExperimentalNode from "./ModelExperimentalNode.js";
-import ModelExperimentalSkin from "./ModelExperimentalSkin.js";
+import ModelSkin from "./ModelSkin.js";
 import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
 import ModelRenderResources from "./ModelRenderResources.js";
 import ModelSilhouettePipelineStage from "./ModelSilhouettePipelineStage.js";
@@ -118,7 +118,7 @@ export default function ModelExperimentalSceneGraph(options) {
   /**
    * The runtime skins that affect nodes in the scene graph.
    *
-   * @type {ModelExperimentalSkin[]}
+   * @type {ModelSkin[]}
    * @readonly
    *
    * @private
@@ -278,7 +278,7 @@ function initialize(sceneGraph) {
   for (let i = 0; i < skinsLength; i++) {
     const skin = skins[i];
     runtimeSkins.push(
-      new ModelExperimentalSkin({
+      new ModelSkin({
         skin: skin,
         sceneGraph: sceneGraph,
       })

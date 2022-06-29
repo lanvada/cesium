@@ -387,7 +387,7 @@ Object.defineProperties(ModelExperimentalNode.prototype, {
    * The skin applied to this node, if it exists.
    *
    * @memberof ModelExperimentalNode.prototype
-   * @type {ModelExperimentalSkin}
+   * @type {ModelSkin}
    * @readonly
    */
   runtimeSkin: {
