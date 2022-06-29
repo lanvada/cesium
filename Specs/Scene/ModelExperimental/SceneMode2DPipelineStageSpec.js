@@ -3,7 +3,7 @@ import {
   combine,
   GltfLoader,
   Matrix4,
-  ModelExperimentalStatistics,
+  ModelStatistics,
   ModelType,
   ModelExperimentalUtility,
   Resource,
@@ -77,7 +77,7 @@ describe("Scene/ModelExperimental/SceneMode2DPipelineStage", function () {
       attributeIndex: 1,
       model: {
         type: ModelType.TILE_GLTF,
-        statistics: new ModelExperimentalStatistics(),
+        statistics: new ModelStatistics(),
         sceneGraph: {
           computedModelMatrix: Matrix4.IDENTITY,
         },

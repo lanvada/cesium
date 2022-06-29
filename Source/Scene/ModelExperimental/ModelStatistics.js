@@ -3,14 +3,14 @@ import Check from "../../Core/Check.js";
 /**
  * Rendering statistics for a single model
  *
- * @alias ModelExperimentalStatistics
+ * @alias ModelStatistics
  * @constructor
  *
  * @see Cesium3DTilesetStatistics
  *
  * @private
  */
-export default function ModelExperimentalStatistics() {
+export default function ModelStatistics() {
   /**
    * Total number of points across all POINTS primitives in this model
    *
@@ -69,7 +69,7 @@ export default function ModelExperimentalStatistics() {
  *
  * @private
  */
-ModelExperimentalStatistics.prototype.clear = function () {
+ModelStatistics.prototype.clear = function () {
   this.pointsLength = 0;
   this.trianglesLength = 0;
   this.geometryByteLength = 0;
@@ -80,10 +80,7 @@ ModelExperimentalStatistics.prototype.clear = function () {
   this.textureIdSet = {};
 };
 
-ModelExperimentalStatistics.prototype.addBuffer = function (
-  buffer,
-  hasCpuCopy
-) {
+ModelStatistics.prototype.addBuffer = function (buffer, hasCpuCopy) {
   //>>includeStart('debug', pragmas.debug);
   Check.typeOf.object("buffer", buffer);
   Check.typeOf.bool("hasCpuCopy", hasCpuCopy);
@@ -99,7 +96,7 @@ ModelExperimentalStatistics.prototype.addBuffer = function (
   this.bufferIdSet[buffer._id] = true;
 };
 
-ModelExperimentalStatistics.prototype.addTexture = function (texture) {
+ModelStatistics.prototype.addTexture = function (texture) {
   //>>includeStart('debug', pragmas.debug);
   Check.typeOf.object("texture", texture);
   //>>includeEnd('debug');

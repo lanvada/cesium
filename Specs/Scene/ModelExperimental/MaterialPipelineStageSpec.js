@@ -7,7 +7,7 @@ import {
   Matrix3,
   MaterialPipelineStage,
   ModelAlphaOptions,
-  ModelExperimentalStatistics,
+  ModelStatistics,
   ModelLightingOptions,
   Pass,
   Resource,
@@ -110,7 +110,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -141,7 +141,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -192,7 +192,7 @@ describe(
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
           model: {
-            statistics: new ModelExperimentalStatistics(),
+            statistics: new ModelStatistics(),
           },
         };
 
@@ -242,7 +242,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -293,7 +293,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -344,7 +344,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -394,7 +394,7 @@ describe(
           lightingOptions: lightingOptions,
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -417,7 +417,7 @@ describe(
           lightingOptions: lightingOptions,
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -440,7 +440,7 @@ describe(
           lightingOptions: lightingOptions,
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -463,7 +463,7 @@ describe(
           lightingOptions: lightingOptions,
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -486,7 +486,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         MaterialPipelineStage.process(
@@ -513,7 +513,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         const cutoff = 0.6;
@@ -542,7 +542,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
           pass: Pass.OPAQUE,
         };
 
@@ -571,7 +571,7 @@ describe(
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: renderStateOptions,
           model: {
-            statistics: new ModelExperimentalStatistics(),
+            statistics: new ModelStatistics(),
             backFaceCulling: false,
           },
           cull: true,
@@ -602,7 +602,7 @@ describe(
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: renderStateOptions,
           model: {
-            statistics: new ModelExperimentalStatistics(),
+            statistics: new ModelStatistics(),
             backFaceCulling: true,
           },
           cull: true,
@@ -633,7 +633,7 @@ describe(
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: renderStateOptions,
           model: {
-            statistics: new ModelExperimentalStatistics(),
+            statistics: new ModelStatistics(),
             backFaceCulling: true,
           },
         };
@@ -665,7 +665,7 @@ describe(
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: renderStateOptions,
           model: {
-            statistics: new ModelExperimentalStatistics(),
+            statistics: new ModelStatistics(),
             color: new Color(0, 0, 1, 0.5),
             backFaceCulling: true,
           },
@@ -696,7 +696,7 @@ describe(
           lightingOptions: new ModelLightingOptions(),
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
-          model: { statistics: new ModelExperimentalStatistics() },
+          model: { statistics: new ModelStatistics() },
         };
 
         primitive.material.doubleSided = true;
@@ -726,7 +726,7 @@ describe(
           alphaOptions: new ModelAlphaOptions(),
           renderStateOptions: {},
           model: {
-            statistics: new ModelExperimentalStatistics(),
+            statistics: new ModelStatistics(),
             debugWireframe: true,
           },
         };

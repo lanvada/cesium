@@ -14,7 +14,7 @@ import HeightReference from "../HeightReference.js";
 import ImageBasedLighting from "../ImageBasedLighting.js";
 import ModelExperimentalAnimationCollection from "./ModelExperimentalAnimationCollection.js";
 import ModelSceneGraph from "./ModelSceneGraph.js";
-import ModelExperimentalStatistics from "./ModelExperimentalStatistics.js";
+import ModelStatistics from "./ModelStatistics.js";
 import ModelType from "./ModelType.js";
 import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
 import Pass from "../../Renderer/Pass.js";
@@ -326,7 +326,7 @@ export default function ModelExperimental(options) {
     SplitDirection.NONE
   );
 
-  this._statistics = new ModelExperimentalStatistics();
+  this._statistics = new ModelStatistics();
 
   this._sceneMode = undefined;
   this._projectTo2D = defaultValue(options.projectTo2D, false);
@@ -559,7 +559,7 @@ Object.defineProperties(ModelExperimental.prototype, {
    *
    * @memberof ModelExperimental.prototype
    *
-   * @type {ModelExperimentalStatistics}
+   * @type {ModelStatistics}
    * @readonly
    *
    * @private

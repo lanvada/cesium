@@ -1,7 +1,7 @@
 import {
   combine,
   GltfLoader,
-  ModelExperimentalStatistics,
+  ModelStatistics,
   ModelType,
   PickingPipelineStage,
   ShaderBuilder,
@@ -73,7 +73,7 @@ describe("Scene/ModelExperimental/PickingPipelineStage", function () {
       model: {
         _pipelineResources: [],
         _pickIds: [],
-        statistics: new ModelExperimentalStatistics(),
+        statistics: new ModelStatistics(),
         type: ModelType.GLTF,
       },
       runtimePrimitive: {

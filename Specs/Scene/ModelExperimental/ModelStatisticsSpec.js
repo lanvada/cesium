@@ -1,8 +1,8 @@
-import { ModelExperimentalStatistics } from "../../../Source/Cesium.js";
+import { ModelStatistics } from "../../../Source/Cesium.js";
 
-describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
+describe("Scene/ModelExperimental/ModelStatistics", function () {
   it("constructs", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
     expect(statistics.pointsLength).toBe(0);
     expect(statistics.trianglesLength).toBe(0);
     expect(statistics.geometryByteLength).toBe(0);
@@ -13,7 +13,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("clears", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
     statistics.pointsLength = 10;
     statistics.trianglesLength = 10;
     statistics.geometryByteLength = 10;
@@ -34,7 +34,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("addBuffer throws without buffer", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
 
     expect(function () {
       return statistics.addBuffer(undefined, false);
@@ -42,7 +42,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("addBuffer throws without hasCpuCopy", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
 
     expect(function () {
       return statistics.addBuffer({}, undefined);
@@ -50,7 +50,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("addBuffer counts GPU buffers", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
 
     const buffer = {
       _id: "uuid",
@@ -69,7 +69,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("addBuffer counts GPU buffers with CPU copy", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
 
     const buffer = {
       _id: "uuid",
@@ -88,7 +88,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("addBuffer de-duplicates buffers", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
 
     const buffer = {
       _id: "uuid1",
@@ -116,7 +116,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("addTexture throws without texture", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
 
     expect(function () {
       return statistics.addTexture(undefined);
@@ -124,7 +124,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("addTexture counts textures", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
 
     const texture = {
       _id: "uuid",
@@ -143,7 +143,7 @@ describe("Scene/ModelExperimental/ModelExperimentalStatistics", function () {
   });
 
   it("addTexture de-duplicates textures", function () {
-    const statistics = new ModelExperimentalStatistics();
+    const statistics = new ModelStatistics();
 
     const texture = {
       _id: "uuid1",
