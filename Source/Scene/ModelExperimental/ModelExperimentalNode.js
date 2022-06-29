@@ -11,14 +11,14 @@ import Quaternion from "../../Core/Quaternion.js";
 import NodeStatisticsPipelineStage from "./NodeStatisticsPipelineStage.js";
 
 /**
- * An in-memory representation of a node as part of the {@link ModelExperimentalSceneGraph}.
+ * An in-memory representation of a node as part of the {@link ModelSceneGraph}.
  *
  *
  * @param {Object} options An object containing the following options:
  * @param {ModelComponents.Node} options.node The corresponding node components from the 3D model
  * @param {Matrix4} options.transform The transform of this node, excluding transforms from the node's ancestors or children.
  * @param {Matrix4} options.transformToRoot The product of the transforms of all the node's ancestors, excluding the node's own transform.
- * @param {ModelExperimentalSceneGraph} options.sceneGraph The scene graph this node belongs to.
+ * @param {ModelSceneGraph} options.sceneGraph The scene graph this node belongs to.
  * @param {Number[]} options.children The indices of the children of this node in the runtime nodes array of the scene graph.
  *
  * @alias ModelExperimentalNode
@@ -135,7 +135,7 @@ Object.defineProperties(ModelExperimentalNode.prototype, {
   /**
    * The scene graph this node belongs to.
    *
-   * @type {ModelExperimentalSceneGraph}
+   * @type {ModelSceneGraph}
    * @readonly
    *
    * @private

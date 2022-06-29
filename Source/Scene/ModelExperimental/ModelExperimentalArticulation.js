@@ -6,12 +6,12 @@ import ModelExperimentalArticulationStage from "./ModelExperimentalArticulationS
 
 /**
  * An in-memory representation of an articulation that affects nodes in the
- * {@link ModelExperimentalSceneGraph}. This is defined in a model by the
+ * {@link ModelSceneGraph}. This is defined in a model by the
  * <code>AGI_articulations</code> extension.
  *
  * @param {Object} options An object containing the following options:
  * @param {ModelComponents.Articulation} options.articulation The articulation components from the 3D model.
- * @param {ModelExperimentalSceneGraph} options.sceneGraph The scene graph this articulation belongs to.
+ * @param {ModelSceneGraph} options.sceneGraph The scene graph this articulation belongs to.
  *
  * @alias ModelExperimentalArticulation
  * @constructor
@@ -39,7 +39,7 @@ export default function ModelExperimentalArticulation(options) {
   this._runtimeNodes = [];
 
   // Set to true so that the first call to
-  // ModelExperimentalSceneGraph.applyArticulations will work.
+  // ModelSceneGraph.applyArticulations will work.
   this._dirty = true;
 
   initialize(this);
@@ -65,7 +65,7 @@ Object.defineProperties(ModelExperimentalArticulation.prototype, {
    * The scene graph that this articulation belongs to.
    *
    * @memberof ModelExperimentalArticulation.prototype
-   * @type {ModelExperimentalSceneGraph}
+   * @type {ModelSceneGraph}
    * @readonly
    *
    * @private

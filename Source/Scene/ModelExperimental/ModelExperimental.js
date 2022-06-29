@@ -13,7 +13,7 @@ import GltfLoader from "../GltfLoader.js";
 import HeightReference from "../HeightReference.js";
 import ImageBasedLighting from "../ImageBasedLighting.js";
 import ModelExperimentalAnimationCollection from "./ModelExperimentalAnimationCollection.js";
-import ModelExperimentalSceneGraph from "./ModelExperimentalSceneGraph.js";
+import ModelSceneGraph from "./ModelSceneGraph.js";
 import ModelExperimentalStatistics from "./ModelExperimentalStatistics.js";
 import ModelType from "./ModelType.js";
 import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
@@ -151,7 +151,7 @@ export default function ModelExperimental(options) {
   this._computedScale = this._clampedScale;
 
   /**
-   * Whether or not the ModelExperimentalSceneGraph should call updateModelMatrix.
+   * Whether or not the ModelSceneGraph should call updateModelMatrix.
    * This will be true if any of the model matrix, scale, minimum pixel size, or maximum scale are dirty.
    *
    * @type {Number}
@@ -238,7 +238,7 @@ export default function ModelExperimental(options) {
   this._pickIds = [];
 
   // The model's bounding sphere and its initial radius are computed
-  // in ModelExperimentalSceneGraph.
+  // in ModelSceneGraph.
   this._boundingSphere = new BoundingSphere();
   this._initialRadius = undefined;
 
@@ -433,7 +433,7 @@ function initialize(model) {
       createModelFeatureTables(model, structuralMetadata);
     }
 
-    const sceneGraph = new ModelExperimentalSceneGraph({
+    const sceneGraph = new ModelSceneGraph({
       model: model,
       modelComponents: components,
     });
@@ -681,7 +681,7 @@ Object.defineProperties(ModelExperimental.prototype, {
    *
    * @memberof ModelExperimental.prototype
    *
-   * @type {ModelExperimentalSceneGraph}
+   * @type {ModelSceneGraph}
    * @private
    */
   sceneGraph: {

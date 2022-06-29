@@ -23,7 +23,7 @@ import {
   Math as CesiumMath,
   Matrix4,
   ModelExperimental,
-  ModelExperimentalSceneGraph,
+  ModelSceneGraph,
   ModelFeature,
   Pass,
   PrimitiveType,
@@ -1423,7 +1423,7 @@ describe(
     it("changing model matrix works", function () {
       const translation = new Cartesian3(10, 0, 0);
       const updateModelMatrix = spyOn(
-        ModelExperimentalSceneGraph.prototype,
+        ModelSceneGraph.prototype,
         "updateModelMatrix"
       ).and.callThrough();
       return loadAndZoomToModelExperimental(
@@ -2216,7 +2216,7 @@ describe(
 
     it("changing scale works", function () {
       const updateModelMatrix = spyOn(
-        ModelExperimentalSceneGraph.prototype,
+        ModelSceneGraph.prototype,
         "updateModelMatrix"
       ).and.callThrough();
       return loadAndZoomToModelExperimental(
@@ -2311,7 +2311,7 @@ describe(
 
     it("changing minimumPixelSize works", function () {
       const updateModelMatrix = spyOn(
-        ModelExperimentalSceneGraph.prototype,
+        ModelSceneGraph.prototype,
         "updateModelMatrix"
       ).and.callThrough();
       return loadAndZoomToModelExperimental(
@@ -2346,7 +2346,7 @@ describe(
 
     it("changing minimumPixelSize doesn't affect bounding sphere or scale", function () {
       const updateModelMatrix = spyOn(
-        ModelExperimentalSceneGraph.prototype,
+        ModelSceneGraph.prototype,
         "updateModelMatrix"
       ).and.callThrough();
       return loadAndZoomToModelExperimental(
@@ -2411,7 +2411,7 @@ describe(
 
     it("changing maximumScale works", function () {
       const updateModelMatrix = spyOn(
-        ModelExperimentalSceneGraph.prototype,
+        ModelSceneGraph.prototype,
         "updateModelMatrix"
       ).and.callThrough();
       return loadAndZoomToModelExperimental(

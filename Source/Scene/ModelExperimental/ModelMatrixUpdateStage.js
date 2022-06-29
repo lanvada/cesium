@@ -21,7 +21,7 @@ ModelMatrixUpdateStage.name = "ModelMatrixUpdateStage"; // Helps with debugging
  * </ul>
  *
  * @param {ModelExperimentalNode} runtimeNode
- * @param {ModelExperimentalSceneGraph} sceneGraph
+ * @param {ModelSceneGraph} sceneGraph
  * @param {FrameState} frameState
  *
  * @private
