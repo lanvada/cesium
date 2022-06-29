@@ -24,12 +24,12 @@ import WebGLConstants from "../../Core/WebGLConstants.js";
  * @param {DrawCommand} options.command The draw command from which to derive other commands from.
  * @param {PrimitiveRenderResources} options.primitiveRenderResources The render resources of the primitive associated with the command.
  * @param {Boolean} [options.useSilhouetteCommands=false] Whether the model has a silhouette and needs to derive silhouette commands.
- * @alias ModelExperimentalDrawCommand
+ * @alias ModelDrawCommand
  * @constructor
  *
  * @private
  */
-function ModelExperimentalDrawCommand(options) {
+function ModelDrawCommand(options) {
   options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
   const command = options.command;
@@ -81,7 +81,7 @@ function initialize(drawCommand) {
   // new commands. As of now, a style can't change an originally translucent
   // feature to opaque since the style's alpha is modulated, not a replacement.
   // When this changes, we need to derive new opaque commands in the constructor
-  // of ModelExperimentalDrawCommand.
+  // of ModelDrawCommand.
   if (defined(styleCommandsNeeded) && command.pass !== Pass.TRANSLUCENT) {
     const translucentCommand = deriveTranslucentCommand(command);
     switch (styleCommandsNeeded) {
@@ -101,11 +101,11 @@ function initialize(drawCommand) {
   buildCommandList(drawCommand);
 }
 
-Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
+Object.defineProperties(ModelDrawCommand.prototype, {
   /**
    * The main draw command that the other commands are derived from.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {DrawCommand}
    *
    * @readonly
@@ -120,7 +120,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
   /**
    * The runtime primitive that the draw command belongs to.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {ModelPrimitive}
    *
    * @readonly
@@ -135,7 +135,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
   /**
    * The model that the draw command belongs to.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {ModelExperimental}
    *
    * @readonly
@@ -150,7 +150,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
   /**
    * The primitive type of the main draw command.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {PrimitiveType}
    *
    * @readonly
@@ -166,7 +166,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
    * The current model matrix applied to the draw commands. If there are
    * 2D draw commands, their model matrix will be derived from the 3D one.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {Matrix4}
    *
    * @readonly
@@ -188,7 +188,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
    * to the the primitive's bounding sphere transformed by the draw
    * command's model matrix.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {BoundingSphere}
    *
    * @readonly
@@ -203,7 +203,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
   /**
    * Whether the geometry casts or receives shadows from light sources.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {ShadowMode}
    *
    * @private
@@ -225,7 +225,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
    * translucent, if the command is drawing translucent geometry, or if the
    * model is being drawn with a silhouette.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {Boolean}
    *
    * @private
@@ -247,7 +247,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
   /**
    * Determines which faces to cull, if culling is enabled.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {CullFace}
    *
    * @private
@@ -269,7 +269,7 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
   /**
    * Whether to draw the bounding sphere associated with this draw command.
    *
-   * @memberof ModelExperimentalDrawCommand.prototype
+   * @memberof ModelDrawCommand.prototype
    * @type {Boolean}
    *
    * @private
@@ -480,7 +480,7 @@ function updateShowBoundingVolume(drawCommand) {
  *
  * @private
  */
-ModelExperimentalDrawCommand.prototype.getCommands = function (frameState) {
+ModelDrawCommand.prototype.getCommands = function (frameState) {
   const commandList = this._commandList;
   const commandList2D = this._commandList2D;
 
@@ -556,13 +556,12 @@ function derive2DCommand(command) {
  * @type {Number}
  * @private
  */
-ModelExperimentalDrawCommand.silhouettesLength = 0;
+ModelDrawCommand.silhouettesLength = 0;
 
 function deriveSilhouetteModelCommand(command, model) {
   // Wrap around after exceeding the 8-bit stencil limit.
   // The reference is unique to each model until this point.
-  const stencilReference =
-    ++ModelExperimentalDrawCommand.silhouettesLength % 255;
+  const stencilReference = ++ModelDrawCommand.silhouettesLength % 255;
   const silhouetteModelCommand = DrawCommand.shallowClone(command);
   let renderState = clone(command.renderState, true);
 
@@ -606,7 +605,7 @@ function deriveSilhouetteModelCommand(command, model) {
 function deriveSilhouetteColorCommand(command, model) {
   // Wrap around after exceeding the 8-bit stencil limit.
   // The reference is unique to each model until this point.
-  const stencilReference = ModelExperimentalDrawCommand.silhouettesLength % 255;
+  const stencilReference = ModelDrawCommand.silhouettesLength % 255;
   const silhouetteColorCommand = DrawCommand.shallowClone(command);
   let renderState = clone(command.renderState, true);
   renderState.depthTest.enabled = true;
@@ -676,4 +675,4 @@ function shouldUse2DCommands(drawCommand, frameState) {
   return (left < idl2D && right > idl2D) || (left < -idl2D && right > -idl2D);
 }
 
-export default ModelExperimentalDrawCommand;
+export default ModelDrawCommand;

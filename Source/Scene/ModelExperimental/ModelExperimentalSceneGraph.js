@@ -432,7 +432,7 @@ const scratchModelPositionMax = new Cartesian3();
 const scratchPrimitivePositionMin = new Cartesian3();
 const scratchPrimitivePositionMax = new Cartesian3();
 /**
- * Generates the {@link ModelExperimentalDrawCommand} for each primitive in the model.
+ * Generates the {@link ModelDrawCommand} for each primitive in the model.
  *
  * @param {FrameState} frameState The current frame state. This is needed to
  * allocate GPU resources as needed.

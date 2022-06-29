@@ -4,7 +4,7 @@ import defined from "../../Core/defined.js";
 import DeveloperError from "../../Core/DeveloperError.js";
 import DrawCommand from "../../Renderer/DrawCommand.js";
 import Matrix4 from "../../Core/Matrix4.js";
-import ModelExperimentalDrawCommand from "./ModelExperimentalDrawCommand.js";
+import ModelDrawCommand from "./ModelDrawCommand.js";
 import ModelExperimentalFS from "../../Shaders/ModelExperimental/ModelExperimentalFS.js";
 import ModelExperimentalVS from "../../Shaders/ModelExperimental/ModelExperimentalVS.js";
 import ModelExperimentalUtility from "./ModelExperimentalUtility.js";
@@ -16,13 +16,13 @@ import StencilConstants from "../StencilConstants.js";
 import VertexArray from "../../Renderer/VertexArray.js";
 
 /**
- * Builds the {@link ModelExperimentalDrawCommand} for a {@link ModelPrimitive}
+ * Builds the {@link ModelDrawCommand} for a {@link ModelPrimitive}
  * using its render resources.
  *
  * @param {PrimitiveRenderResources} primitiveRenderResources The render resources for a primitive.
  * @param {FrameState} frameState The frame state for creating GPU resources.
  *
- * @returns {ModelExperimentalDrawCommand} The generated ModelExperimentalDrawCommand.
+ * @returns {ModelDrawCommand} The generated ModelDrawCommand.
  *
  * @private
  */
@@ -34,7 +34,7 @@ export default function buildDrawCommand(primitiveRenderResources, frameState) {
   const model = primitiveRenderResources.model;
   const context = frameState.context;
 
-  const indexBuffer = getIndexBuffer(primitiveRenderResources, frameState);
+  const indexBuffer = getIndexBuffer(primitiveRenderResources);
 
   const vertexArray = new VertexArray({
     context: context,
@@ -112,7 +112,7 @@ export default function buildDrawCommand(primitiveRenderResources, frameState) {
 
   const useSilhouetteCommands = model.hasSilhouette(frameState);
 
-  return new ModelExperimentalDrawCommand({
+  return new ModelDrawCommand({
     primitiveRenderResources: primitiveRenderResources,
     command: command,
     useSilhouetteCommands: useSilhouetteCommands,
@@ -122,7 +122,7 @@ export default function buildDrawCommand(primitiveRenderResources, frameState) {
 /**
  * @private
  */
-function getIndexBuffer(primitiveRenderResources, frameState) {
+function getIndexBuffer(primitiveRenderResources) {
   const wireframeIndexBuffer = primitiveRenderResources.wireframeIndexBuffer;
   if (defined(wireframeIndexBuffer)) {
     return wireframeIndexBuffer;

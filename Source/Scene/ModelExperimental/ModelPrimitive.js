@@ -90,9 +90,9 @@ export default function ModelPrimitive(options) {
   this.pipelineStages = [];
 
   /**
-   * The generated {@link ModelExperimentalDrawCommand} associated with this primitive.
+   * The generated {@link ModelDrawCommand} associated with this primitive.
    *
-   * @type {ModelExperimentalDrawCommand}
+   * @type {ModelDrawCommand}
    *
    * @private
    */
