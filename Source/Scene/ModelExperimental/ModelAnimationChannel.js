@@ -23,12 +23,12 @@ const AnimatedPropertyType = ModelComponents.AnimatedPropertyType;
  * @param {ModelExperimentalAnimation} options.runtimeAnimation The runtime animation containing this channel.
  * @param {ModelExperimentalNode} options.runtimeNode The runtime node that this channel will animate.
  *
- * @alias ModelExperimentalAnimationChannel
+ * @alias ModelAnimationChannel
  * @constructor
  *
  * @private
  */
-function ModelExperimentalAnimationChannel(options) {
+function ModelAnimationChannel(options) {
   options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
   const channel = options.channel;
@@ -52,11 +52,11 @@ function ModelExperimentalAnimationChannel(options) {
   initialize(this);
 }
 
-Object.defineProperties(ModelExperimentalAnimationChannel.prototype, {
+Object.defineProperties(ModelAnimationChannel.prototype, {
   /**
    * The glTF animation channel.
    *
-   * @memberof ModelExperimentalAnimationChannel.prototype
+   * @memberof ModelAnimationChannel.prototype
    *
    * @type {ModelComponents.AnimationChannel}
    * @readonly
@@ -72,7 +72,7 @@ Object.defineProperties(ModelExperimentalAnimationChannel.prototype, {
   /**
    * The runtime animation that owns this channel.
    *
-   * @memberof ModelExperimentalAnimationChannel.prototype
+   * @memberof ModelAnimationChannel.prototype
    *
    * @type {ModelExperimentalAnimation}
    * @readonly
@@ -88,7 +88,7 @@ Object.defineProperties(ModelExperimentalAnimationChannel.prototype, {
   /**
    * The runtime node that this channel animates.
    *
-   * @memberof ModelExperimentalAnimationChannel.prototype
+   * @memberof ModelAnimationChannel.prototype
    *
    * @type {ModelExperimentalNode}
    * @readonly
@@ -104,7 +104,7 @@ Object.defineProperties(ModelExperimentalAnimationChannel.prototype, {
   /**
    * The splines used to evaluate this animation channel.
    *
-   * @memberof ModelExperimentalAnimationChannel.prototype
+   * @memberof ModelAnimationChannel.prototype
    *
    * @type {Spline[]}
    * @readonly
@@ -171,45 +171,46 @@ function createSpline(times, points, interpolation, path) {
 }
 
 function createSplines(times, points, interpolation, path, count) {
+  if (path !== AnimatedPropertyType.WEIGHTS) {
+    const spline = createSpline(times, points, interpolation, path);
+    return [spline];
+  }
+
   const splines = [];
-  if (path === AnimatedPropertyType.WEIGHTS) {
-    const pointsLength = points.length;
-    // Get the number of keyframes in each weight's output.
-    const outputLength = pointsLength / count;
+  const pointsLength = points.length;
+  // Get the number of keyframes in each weight's output.
+  const outputLength = pointsLength / count;
 
-    // Iterate over the array using the number of morph targets in the model.
-    let targetIndex, i;
-    for (targetIndex = 0; targetIndex < count; targetIndex++) {
-      const output = new Array(outputLength);
+  // Iterate over the array using the number of morph targets in the model.
+  let targetIndex, i;
+  for (targetIndex = 0; targetIndex < count; targetIndex++) {
+    const output = new Array(outputLength);
 
-      // Weights are ordered such that they are keyframed in the order in which
-      // their targets appear the glTF. For example, the weights of three targets
-      // may appear as [w(0,0), w(0,1), w(0,2), w(1,0), w(1,1), w(1,2) ...],
-      // where i and j in w(i,j) are the time indices and target indices, respectively.
+    // Weights are ordered such that they are keyframed in the order in which
+    // their targets appear the glTF. For example, the weights of three targets
+    // may appear as [w(0,0), w(0,1), w(0,2), w(1,0), w(1,1), w(1,2) ...],
+    // where i and j in w(i,j) are the time indices and target indices, respectively.
 
-      // However, for morph targets with cubic interpolation, the data is stored per
-      // keyframe in the order [a1, a2, ..., an, v1, v2, ... vn, b1, b2, ..., bn],
-      // where ai, vi, and bi are the in-tangent, property, and out-tangents of
-      // the ith morph target respectively.
-      let pointsIndex = targetIndex;
-      if (interpolation === InterpolationType.CUBICSPLINE) {
-        for (i = 0; i < outputLength; i += 3) {
-          output[i] = points[pointsIndex];
-          output[i + 1] = points[pointsIndex + count];
-          output[i + 2] = points[pointsIndex + 2 * count];
-          pointsIndex += count * 3;
-        }
-      } else {
-        for (i = 0; i < outputLength; i++) {
-          output[i] = points[pointsIndex];
-          pointsIndex += count;
-        }
+    // However, for morph targets with cubic interpolation, the data is stored per
+    // keyframe in the order [a1, a2, ..., an, v1, v2, ... vn, b1, b2, ..., bn],
+    // where ai, vi, and bi are the in-tangent, property, and out-tangents of
+    // the ith morph target respectively.
+    let pointsIndex = targetIndex;
+    if (interpolation === InterpolationType.CUBICSPLINE) {
+      for (i = 0; i < outputLength; i += 3) {
+        output[i] = points[pointsIndex];
+        output[i + 1] = points[pointsIndex + count];
+        output[i + 2] = points[pointsIndex + 2 * count];
+        pointsIndex += count * 3;
       }
-
-      splines.push(createSpline(times, output, interpolation, path));
+    } else {
+      for (i = 0; i < outputLength; i++) {
+        output[i] = points[pointsIndex];
+        pointsIndex += count;
+      }
     }
-  } else {
-    splines.push(createSpline(times, points, interpolation, path));
+
+    splines.push(createSpline(times, output, interpolation, path));
   }
 
   return splines;
@@ -258,7 +259,7 @@ function initialize(runtimeChannel) {
  *
  * @private
  */
-ModelExperimentalAnimationChannel.prototype.animate = function (time) {
+ModelAnimationChannel.prototype.animate = function (time) {
   const splines = this._splines;
   const path = this._path;
   const model = this._runtimeAnimation.model;
@@ -289,4 +290,4 @@ ModelExperimentalAnimationChannel.prototype.animate = function (time) {
   }
 };
 
-export default ModelExperimentalAnimationChannel;
+export default ModelAnimationChannel;
