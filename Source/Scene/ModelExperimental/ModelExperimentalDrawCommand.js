@@ -14,6 +14,9 @@ import SceneMode from "../SceneMode.js";
 import ShadowMode from "../ShadowMode.js";
 import StyleCommandsNeeded from "./StyleCommandsNeeded.js";
 import WebGLConstants from "../../Core/WebGLConstants.js";
+import CullFace from "./CullFace.js";
+import Cartesian2 from "../../Core/Cartesian2.js";
+import StencilConstants from "../StencilConstants.js";
 
 /**
  * A wrapper around the draw commands used to render a {@link ModelExperimentalPrimitive}.
@@ -24,6 +27,7 @@ import WebGLConstants from "../../Core/WebGLConstants.js";
  * @param {DrawCommand} options.command The draw command from which to derive other commands from.
  * @param {PrimitiveRenderResources} options.primitiveRenderResources The render resources of the primitive associated with the command.
  * @param {Boolean} [options.useSilhouetteCommands=false] Whether the model has a silhouette and needs to derive silhouette commands.
+ * @param {Boolean} [options.useSkipLevelOfDetailCommands=false] Whether the model is part of a tileset that uses the skipLevelOfDetail optimization and needs to derive those commands.
  * @alias ModelExperimentalDrawCommand
  * @constructor
  *
@@ -36,6 +40,10 @@ function ModelExperimentalDrawCommand(options) {
   const renderResources = options.primitiveRenderResources;
   const useSilhouetteCommands = defaultValue(
     options.useSilhouetteCommands,
+    false
+  );
+  const useSkipLevelOfDetailCommands = defaultValue(
+    options.useSkipLevelOfDetailCommands,
     false
   );
 
@@ -63,6 +71,7 @@ function ModelExperimentalDrawCommand(options) {
   this._shadows = renderResources.model.shadows;
   this._debugShowBoundingVolume = command.debugShowBoundingVolume;
   this._useSilhouetteCommands = useSilhouetteCommands;
+  this._useSkipLevelOfDetailCommands = useSkipLevelOfDetailCommands;
 
   // The command list contains one or more of the following commands:
   // - the original draw command
@@ -80,6 +89,14 @@ function ModelExperimentalDrawCommand(options) {
   // before the silhouette is rendered.
   this._silhouetteCommandList = [];
   this._silhouetteCommandList2D = [];
+
+  // Depth-only back face commands for unresolved tiles when using the skipLod optimization
+  this._skipLodBackfaceCommandList = [];
+  this._skipLodBackfaceCommandList2D = [];
+
+  // Stencil commands for resolved tiles when using the skipLod optimization
+  this._skipLodStencilCommandList = [];
+  this._skipLodStencilCommandList2D = [];
 
   this._runtimePrimitive = renderResources.runtimePrimitive;
   this._model = renderResources.model;
@@ -305,9 +322,6 @@ Object.defineProperties(ModelExperimentalDrawCommand.prototype, {
 
 function buildCommandList(drawCommand) {
   const commandList = drawCommand._commandList;
-  const commandList2D = drawCommand._commandList2D;
-  commandList.length = 0;
-  commandList2D.length = 0;
 
   // Add opaque and translucent commands depending on the style commands needed.
   const styleCommandsNeeded = drawCommand._styleCommandsNeeded;
@@ -333,10 +347,30 @@ function buildCommandList(drawCommand) {
     commandList.push(originalCommand);
   }
 
+  if (drawCommand._useSkipLevelOfDetailCommands) {
+    const skipLodBackfaceCommandList = drawCommand._skipLodBackfaceCommandList;
+    const skipLodStencilCommandList = drawCommand._skipLodStencilCommandList;
+    const length = commandList.length;
+    const model = drawCommand._model;
+    for (let i = 0; i < length; i++) {
+      const command = commandList[i];
+      // TODO: don't want to derive for translucent command
+      const skipLodBackfaceCommand = deriveSkipLodBackfaceCommand(
+        command,
+        model
+      );
+      // TODO: ok to derive for translucent command, it will just be a no-op
+      const skipLodStencilCommand = deriveSkipLodStencilCommand(command, model);
+
+      skipLodBackfaceCommandList.push(skipLodBackfaceCommand);
+      skipLodStencilCommandList.push(skipLodStencilCommand);
+    }
+  }
+
   // Derive silhouette commands from the active commands.
   if (drawCommand._useSilhouetteCommands) {
     const length = commandList.length;
-    const silhouetteCommands = [];
+    const silhouetteCommandList = drawCommand._silhouetteCommandList;
     const model = drawCommand._model;
     for (let i = 0; i < length; i++) {
       const command = commandList[i];
@@ -353,15 +387,21 @@ function buildCommandList(drawCommand) {
       commandList[i] = silhouetteModelCommand;
 
       // Store the silhouette-pass commands separately.
-      silhouetteCommands.push(silhouetteColorCommand);
+      silhouetteCommandList.push(silhouetteColorCommand);
     }
-
-    const silhouetteCommandList = drawCommand._silhouetteCommandList;
-    silhouetteCommandList.push.apply(silhouetteCommandList, silhouetteCommands);
   }
 }
 
 const scratchMatrix2D = new Matrix4();
+
+function updateCommandModelMatrix(command, modelMatrix, boundingSphere) {
+  command.modelMatrix = Matrix4.clone(modelMatrix, command.modelMatrix);
+  command.boundingVolume = BoundingSphere.transform(
+    boundingSphere,
+    command.modelMatrix,
+    command.boundingVolume
+  );
+}
 
 function updateModelMatrix(drawCommand) {
   const modelMatrix = drawCommand.modelMatrix;
@@ -370,31 +410,38 @@ function updateModelMatrix(drawCommand) {
   const length = commandList.length;
 
   for (let i = 0; i < length; i++) {
-    const command = commandList[i];
-    command.modelMatrix = Matrix4.clone(modelMatrix, command.modelMatrix);
-    command.boundingVolume = BoundingSphere.transform(
-      boundingSphere,
-      command.modelMatrix,
-      command.boundingVolume
-    );
+    updateCommandModelMatrix(commandList[i], modelMatrix, boundingSphere);
   }
 
-  if (!drawCommand._useSilhouetteCommands) {
-    return;
+  if (drawCommand._useSkipLevelOfDetailCommands) {
+    const skipLodBackFaceCommandList = drawCommand._skipLodBackFaceCommandList;
+    for (let i = 0; i < length; i++) {
+      updateCommandModelMatrix(
+        skipLodBackFaceCommandList[i],
+        modelMatrix,
+        boundingSphere
+      );
+    }
+
+    const skipLodStencilCommandList = drawCommand._skipLodStencilCommandList;
+    for (let i = 0; i < length; i++) {
+      updateCommandModelMatrix(
+        skipLodStencilCommandList[i],
+        modelMatrix,
+        boundingSphere
+      );
+    }
   }
 
-  const silhouetteCommandList = drawCommand._silhouetteCommandList;
-  for (let i = 0; i < length; i++) {
-    const silhouetteCommand = silhouetteCommandList[i];
-    silhouetteCommand.modelMatrix = Matrix4.clone(
-      modelMatrix,
-      silhouetteCommand.modelMatrix
-    );
-    silhouetteCommand.boundingVolume = BoundingSphere.transform(
-      boundingSphere,
-      silhouetteCommand.modelMatrix,
-      silhouetteCommand.boundingVolume
-    );
+  if (drawCommand._useSilhouetteCommands) {
+    const silhouetteCommandList = drawCommand._silhouetteCommandList;
+    for (let i = 0; i < length; i++) {
+      updateCommandModelMatrix(
+        silhouetteCommandList[i],
+        modelMatrix,
+        boundingSphere
+      );
+    }
   }
 }
 
@@ -419,31 +466,40 @@ function updateModelMatrix2D(drawCommand, frameState) {
     frameState.mapProjection.ellipsoid.maximumRadius;
 
   for (let i = 0; i < length2D; i++) {
-    const command = commandList2D[i];
-    command.modelMatrix = Matrix4.clone(modelMatrix2D, command.modelMatrix);
-    command.boundingVolume = BoundingSphere.transform(
-      boundingSphere,
-      command.modelMatrix,
-      command.boundingVolume
-    );
+    updateCommandModelMatrix(commandList2D[i], modelMatrix2D, boundingSphere);
   }
 
-  if (!drawCommand._useSilhouetteCommands) {
-    return;
+  if (drawCommand._useSkipLevelOfDetailCommands) {
+    const skipLodBackFaceCommandList2D =
+      drawCommand._skipLodBackFaceCommandList2D;
+    for (let i = 0; i < length2D; i++) {
+      updateCommandModelMatrix(
+        skipLodBackFaceCommandList2D[i],
+        modelMatrix2D,
+        boundingSphere
+      );
+    }
+
+    const skipLodStencilCommandList2D =
+      drawCommand._skipLodStencilCommandList2D;
+    for (let i = 0; i < length2D; i++) {
+      updateCommandModelMatrix(
+        skipLodStencilCommandList2D[i],
+        modelMatrix2D,
+        boundingSphere
+      );
+    }
   }
 
-  const silhouetteCommandList2D = drawCommand._silhouetteCommandList2D;
-  for (let i = 0; i < length2D; i++) {
-    const silhouetteCommand = silhouetteCommandList2D[i];
-    silhouetteCommand.modelMatrix = Matrix4.clone(
-      modelMatrix2D,
-      silhouetteCommand.modelMatrix
-    );
-    silhouetteCommand.boundingVolume = BoundingSphere.transform(
-      boundingSphere,
-      silhouetteCommand.modelMatrix,
-      silhouetteCommand.boundingVolume
-    );
+  if (drawCommand._useSilhouetteCommands) {
+    const silhouetteCommandList2D = drawCommand._silhouetteCommandList2D;
+    for (let i = 0; i < length2D; i++) {
+      updateCommandModelMatrix(
+        silhouetteCommandList2D[i],
+        modelMatrix2D,
+        boundingSphere
+      );
+    }
   }
 }
 
@@ -460,6 +516,13 @@ function updateShadows(drawCommand) {
     // Shadows should stay disabled for the silhouette color command.
     const model_silhouettePass = command.uniformMap.model_silhouettePass;
     if (defined(model_silhouettePass) && model_silhouettePass()) {
+      continue;
+    }
+
+    // TODO: think about better way to get around this hackiness (same with above)
+    // Shadows should stay disabled for the skipLod back face command
+    const u_polygonOffset = command.uniformMap.u_polygonOffset;
+    if (defined(u_polygonOffset) && u_polygonOffset() > 0.0) {
       continue;
     }
 
@@ -485,6 +548,12 @@ function updateBackFaceCulling(drawCommand) {
     // Back-face culling should stay disabled if the command
     // is drawing translucent geometry.
     if (command.pass === Pass.TRANSLUCENT) {
+      continue;
+    }
+
+    // Back-face culling should stay enabled for the skipLod back face command
+    const u_polygonOffset = command.uniformMap.u_polygonOffset;
+    if (defined(u_polygonOffset) && u_polygonOffset() > 0.0) {
       continue;
     }
 
@@ -541,6 +610,26 @@ ModelExperimentalDrawCommand.prototype.getCommands = function (frameState) {
       commandList2D.push(command2D);
     }
 
+    // Derive 2D skipLod commands
+    if (this._useSkipLevelOfDetailCommands) {
+      const skipLodBackfaceCommands = this._skipLodBackfaceCommandList;
+      const skipLodBackfaceCommands2D = this._skipLodBackfaceCommandList2D;
+
+      const skipLodStencilCommands = this._skipLodStencilCommandList;
+      const skipLodStencilCommands2D = this._skipLodStencilCommandList2D;
+
+      for (let i = 0; i < length; i++) {
+        const skipLodBackfaceCommand2D = derive2DCommand(
+          skipLodBackfaceCommands[i]
+        );
+        skipLodBackfaceCommands2D.push(skipLodBackfaceCommand2D);
+        const skipLodStencilCommand2D = derive2DCommand(
+          skipLodStencilCommands[i]
+        );
+        skipLodStencilCommands2D.push(skipLodStencilCommand2D);
+      }
+    }
+
     // Derive 2D silhouette commands here to avoid duplicate
     // computation in getSilhouetteCommands.
     if (this._useSilhouetteCommands) {
@@ -560,11 +649,60 @@ ModelExperimentalDrawCommand.prototype.getCommands = function (frameState) {
     this._modelMatrix2DDirty = false;
   }
 
+  let commandListToPush = commandList;
+  let commandListToPush2D = commandList2D;
+
+  if (this._useSkipLevelOfDetailCommands) {
+    const content = this.model.content;
+    const tileset = content.tileset;
+    const tile = content.tile;
+
+    const hasMixedContent = tileset._hasMixedContent;
+    const finalResolution = tile._finalResolution;
+
+    if (hasMixedContent) {
+      if (!finalResolution) {
+        const skipLodBackfaceCommands = this._skipLodBackfaceCommandList;
+        const skipLodBackfaceCommands2D = this._skipLodBackfaceCommandList2D;
+
+        tileset._backFaceCommands.push(skipLodBackfaceCommands[0]);
+        tileset._backFaceCommands.push(skipLodBackfaceCommands2D[0]);
+      }
+
+      const skipLodStencilCommands = this._skipLodStencilCommandList;
+      const skipLodStencilCommands2D = this._skipLodStencilCommandList2D;
+      const selectionDepth = tile._selectionDepth;
+      const lastSelectionDepth = getLastSelectionDepth(
+        skipLodStencilCommands[0]
+      );
+
+      if (selectionDepth !== lastSelectionDepth) {
+        const skipLodStencilReference = getStencilReference(selectionDepth);
+
+        for (let i = 0; i < length; i++) {
+          const skipLodStencilCommand = skipLodStencilCommands[i];
+          const skipLodStencilCommand2D = skipLodStencilCommands2D[i];
+
+          let renderState = clone(skipLodStencilCommand.renderState, true);
+          renderState.stencilTest.reference = skipLodStencilReference;
+          renderState = RenderState.fromCache(renderState);
+
+          // TODO: make sure these look like "regular" commands if the command is translucent so the command pushing below works
+          skipLodStencilCommand.renderState = renderState;
+          skipLodStencilCommand2D.renderState = renderState;
+        }
+      }
+
+      commandListToPush = skipLodStencilCommands;
+      commandListToPush2D = skipLodStencilCommands2D;
+    }
+  }
+
   const commands = [];
-  commands.push.apply(commands, commandList);
+  commands.push.apply(commands, commandListToPush);
 
   if (use2D) {
-    commands.push.apply(commands, commandList2D);
+    commands.push.apply(commands, commandListToPush2D);
   }
 
   return commands;
@@ -627,6 +765,10 @@ ModelExperimentalDrawCommand.prototype.getAllCommands = function () {
   commands.push.apply(commands, this._commandList2D);
   commands.push.apply(commands, this._silhouetteCommandList);
   commands.push.apply(commands, this._silhouetteCommandList2D);
+  commands.push.apply(commands, this._skipLodBackfaceCommandList);
+  commands.push.apply(commands, this._skipLodBackfaceCommandList2D);
+  commands.push.apply(commands, this._skipLodStencilCommandList);
+  commands.push.apply(commands, this._skipLodStencilCommandList2D);
 
   return commands;
 };
@@ -767,6 +909,51 @@ function deriveSilhouetteColorCommand(command, model) {
   return silhouetteColorCommand;
 }
 
+function deriveSkipLodBackfaceCommand(drawCommand, model) {}
+
+function deriveZBackfaceCommand(command, frameState) {
+  // Write just backface depth of unresolved tiles so resolved stenciled tiles do not appear in front
+  const zBackfaceCommand = DrawCommand.shallowClone(command);
+  let renderState = clone(command.renderState, true);
+  renderState.cull.enabled = true;
+  renderState.cull.face = CullFace.FRONT;
+  // Back faces do not need to write color.
+  renderState.colorMask = {
+    red: false,
+    green: false,
+    blue: false,
+    alpha: false,
+  };
+  // Push back face depth away from the camera so it is less likely that back faces and front faces of the same tile
+  // intersect and overlap. This helps avoid flickering for very thin double-sided walls.
+  renderState.polygonOffset = {
+    enabled: true,
+    factor: 5.0,
+    units: 5.0,
+  };
+
+  renderState = RenderState.fromCache(renderState);
+
+  const uniformMap = clone(zBackfaceCommand.uniformMap);
+  const polygonOffset = new Cartesian2(5.0, 5.0);
+
+  uniformMap.u_polygonOffset = function () {
+    return polygonOffset;
+  };
+
+  zBackfaceCommand.renderState = renderState;
+  zBackfaceCommand.uniformMap = uniformMap;
+
+  // Make the log depth depth fragment write account for the polygon offset, too.
+  // Otherwise, the back face commands will cause the higher resolution
+  // tiles to disappear.
+  derivedCommand.shaderProgram = getLogDepthPolygonOffsetFragmentShaderProgram(
+    context,
+    command.shaderProgram
+  );
+  return derivedCommand;
+}
+
 function shouldUse2DCommands(drawCommand, frameState) {
   if (frameState.mode !== SceneMode.SCENE2D || drawCommand.model._projectTo2D) {
     return false;
@@ -783,6 +970,22 @@ function shouldUse2DCommands(drawCommand, frameState) {
   const right = boundingSphere.center.y + boundingSphere.radius;
 
   return (left < idl2D && right > idl2D) || (left < -idl2D && right > -idl2D);
+}
+
+function getLastSelectionDepth(stencilCommand) {
+  // Isolate the selection depth from the stencil reference.
+  const reference = stencilCommand.renderState.stencilTest.reference;
+  return (
+    (reference & StencilConstants.SKIP_LOD_MASK) >>>
+    StencilConstants.SKIP_LOD_BIT_SHIFT
+  );
+}
+
+function getStencilReference(selectionDepth) {
+  return (
+    StencilConstants.CESIUM_3D_TILE_MASK |
+    (selectionDepth << StencilConstants.SKIP_LOD_BIT_SHIFT)
+  );
 }
 
 export default ModelExperimentalDrawCommand;

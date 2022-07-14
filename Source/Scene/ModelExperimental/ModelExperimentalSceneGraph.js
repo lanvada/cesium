@@ -21,6 +21,8 @@ import PrimitiveRenderResources from "./PrimitiveRenderResources.js";
 import SceneMode from "../SceneMode.js";
 import SplitDirection from "../SplitDirection.js";
 import Transforms from "../../Core/Transforms.js";
+import TilesetPipelineStage from "./TilesetPipelineStage.js";
+import ModelExperimentalType from "./ModelExperimentalType.js";
 
 /**
  * An in memory representation of the scene graph for a {@link ModelExperimental}
@@ -605,6 +607,10 @@ ModelExperimentalSceneGraph.prototype.configurePipeline = function (
 
   if (model.hasSilhouette(frameState)) {
     modelPipelineStages.push(ModelSilhouettePipelineStage);
+  }
+
+  if (ModelExperimentalType.is3DTiles(model.type)) {
+    modelPipelineStages.push(TilesetPipelineStage);
   }
 };
 
